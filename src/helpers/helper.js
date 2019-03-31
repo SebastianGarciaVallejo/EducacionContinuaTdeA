@@ -1,22 +1,57 @@
 const hbs = require('hbs');
 const fs = require('fs'); 
 listaUsuarios = [];
+listaCursos = [];
 
 hbs.registerHelper('registarUsuario', (usuario) => {
     let respuesta = insertarUsuario(usuario);
     return respuesta;
 });
 
+hbs.registerHelper('listarCursos', () => {
+    
+
+    try {
+        listaCursos = require('../../cursos.json');
+    } catch(error){
+            listaCursos = [];
+    }
+
+
+
+    let texto = '<table class="table table-striped table-hover table-dark">\
+                    <thead class="thead-dark">\
+                        <th>Id</th>\
+                        <th>Nombre</th>\
+                        <th>Descripción</th>\
+                        <th>Valor</th>\
+                        <th>Modalidad</th>\
+                        <th>Intensidad</th>\
+                        <th>Estado</th>\
+                    </thead>\
+                    <tbody>';
+
+    listaCursos.forEach(curso => {
+        texto = texto +
+                '<tr>' +
+                '<td>' + curso.id + '</td>' +
+                '<td>' + curso.nombre + '</td>' +
+                '<td>' + curso.descripcion + '</td>' +
+                '<td>' + curso.valor + '</td>' +
+                '<td>' + curso.modalidad + '</td>' +
+                '<td>' + curso.intensidad + '</td>' +
+                '<td>' + curso.estado + '</td>' +
+                '</tr>';
+    });
+    texto = texto + '</tbody></table>';
+    return texto;
+});
 
 const consultarUsuariosRegistrados = () => {
     try {
     listaUsuarios = require('../../usuarios.json');
-    console.log('Estoy en el try');
-    //listaEstudiantes = JSON.parse(fs.readFileSync('listado.json'));
-    // Esta funcion se utiliza cuando el archivo se actualiza asincronamentre.
     } catch(error){
         listaUsuarios = [];
-        console.log('Estoy en el catch');
     }
 }
 
@@ -48,11 +83,7 @@ const insertarUsuario = (usuarioAInsertar) => {
 
 const guardarUsuario = () => {
     let datos = JSON.stringify(listaUsuarios);
-    console.log('Datos:');
-    console.log(datos);
-
     fs.writeFile('usuarios.json', datos, (err) => {
        if (err) throw (err);
-       console.log('Archivo creado con exito');
     });
 }

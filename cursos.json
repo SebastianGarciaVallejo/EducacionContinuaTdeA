@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "nombre": "Matemáticas",
+        "descripcion": "Curso de matemáticas",
+        "valor": 700000,
+        "modalidad": "Presencial",
+        "intensidad": 32,
+        "estado": "Disponible"
+    },
+    {
+        "id": 2,
+        "nombre": "Ingles",
+        "descripcion": "Curso de Ingles B2",
+        "valor": 500000,
+        "modalidad": "Virtual",
+        "intensidad": 24,
+        "estado": "Disponible"
+    },
+    {
+        "id": 3,
+        "nombre": "Progamación",
+        "descripcion": "Curso basico de programación",
+        "valor": 900000,
+        "modalidad": "Presencial",
+        "intensidad": 45,
+        "estado": "Disponible"
+    },
+    {
+        "id": 4,
+        "nombre": "Node.js",
+        "descripcion": "Curso de fundamentos basicos",
+        "valor": 1000000,
+        "modalidad": "Presencial",
+        "intensidad": 40,
+        "estado": "Disponible"
+    },
+    {
+        "id": 5,
+        "nombre": "Angular 2",
+        "descripcion": "Angular 2 con typescript",
+        "valor": 500000,
+        "modalidad": "Presencial",
+        "intensidad": 20,
+        "estado": "Disponible"
+    },
+    {
+        "id": 6,
+        "nombre": "Scala",
+        "descripcion": "curso de programación funcional",
+        "valor": 900000,
+        "modalidad": "Presencial",
+        "intensidad": 32,
+        "estado": "Disponible"
+    },
+    {
+        "id": 7,
+        "nombre": "Reconocimiento de imagenes",
+        "descripcion": "Reconocimiento de imagenes en Matlab",
+        "valor": 850000,
+        "modalidad": "Presencial",
+        "intensidad": 36,
+        "estado": "Cerrado"
+    },
+    {
+        "id": 8,
+        "nombre": "Liderazgo",
+        "descripcion": "Aprendre a liderar tu equipo de trabajo",
+        "valor": 600000,
+        "modalidad": "Presencial",
+        "intensidad": 28,
+        "estado": "Cerrado"
+    }
+]

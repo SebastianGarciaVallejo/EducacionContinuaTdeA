@@ -46,6 +46,10 @@ app.post('/resultadoOperacion', (req, res) => {
     });
 });
 
+app.get('/verCursos', (req, res) => {
+    res.render('../template/views/listaDeCursos.hbs');
+});
+
 
 
 
