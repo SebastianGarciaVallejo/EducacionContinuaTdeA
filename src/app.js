@@ -50,6 +50,16 @@ app.get('/verCursos', (req, res) => {
     res.render('../template/views/listaDeCursos.hbs');
 });
 
+app.get('/inscribirCurso', (req, res) => {
+    res.render('../template/views/inscripcion.hbs');
+});
+
+app.post('/resultadoInscripcion', (req, res) => {
+    res.render('../template/views/resultadoInscripcion.hbs',{
+        idUsuario: req.body.idUsuario,
+        idCurso: req.body.listaDesplegable
+    });
+});
 
 
 

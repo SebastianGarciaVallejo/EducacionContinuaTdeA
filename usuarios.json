@@ -9,5 +9,16 @@
         "email": "sebas@ejemplo.com",
         "direccion": "calle 59",
         "tipo": "Aspirante"
+    },
+    {
+        "id": "2",
+        "primerNombre": "Juan",
+        "segundoNombre": "Esteban",
+        "primerApellido": "Carvajal",
+        "segundoApellido": "Barrios",
+        "telefono": "2345678",
+        "email": "micorreo@hotmal.com",
+        "direccion": "calle 65 # 35",
+        "tipo": "Aspirante"
     }
 ]
