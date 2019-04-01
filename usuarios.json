@@ -20,5 +20,27 @@
         "email": "micorreo@hotmal.com",
         "direccion": "calle 65 # 35",
         "tipo": "Aspirante"
+    },
+    {
+        "id": "3",
+        "primerNombre": "Carlos",
+        "segundoNombre": "Esteban",
+        "primerApellido": "Gallego",
+        "segundoApellido": "Posada",
+        "telefono": "4325678",
+        "email": "and.er@hotmail.com",
+        "direccion": "carrera 70",
+        "tipo": "Aspirante"
+    },
+    {
+        "id": "4",
+        "primerNombre": "Maria",
+        "segundoNombre": "",
+        "primerApellido": "Restrepo",
+        "segundoApellido": "Calvo",
+        "telefono": "691367",
+        "email": "maria@gmail.com",
+        "direccion": "carrera 78 # 23",
+        "tipo": "Aspirante"
     }
 ]
