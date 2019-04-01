@@ -31,7 +31,7 @@
         "nombre": "Node.js",
         "descripcion": "Curso de fundamentos basicos",
         "valor": 1000000,
-        "modalidad": "Presencial",
+        "modalidad": "Virtual",
         "intensidad": 40,
         "estado": "Disponible"
     },
@@ -67,8 +67,17 @@
         "nombre": "Liderazgo",
         "descripcion": "Aprendre a liderar tu equipo de trabajo",
         "valor": 600000,
-        "modalidad": "Presencial",
+        "modalidad": "Virtual",
         "intensidad": 28,
         "estado": "Cerrado"
+    },
+    {
+        "id": "9",
+        "nombre": "Expresión Corporal",
+        "descripcion": "Aprende a expresar mejor tus ideas.",
+        "valor": "568000",
+        "modalidad": "Virtual",
+        "intensidad": "26",
+        "estado": "Disponible"
     }
 ]

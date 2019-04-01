@@ -81,6 +81,36 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
     return mensaje;
 });
 
+
+
+
+
+
+
+hbs.registerHelper('crearCurso', (informacionCurso)=>{
+    console.log(informacionCurso);
+    consultarCursos();
+    console.log(listaCursos);
+    let respuesta = '';
+    let duplicado = listaCursos.find(registro => registro.id == informacionCurso.id)
+    if(!duplicado){
+        listaCursos.push(informacionCurso);
+        guardarCurso();
+        respuesta = "Se ha registrado el curso satisfactoriamente.";
+    }else {
+        respuesta = 'Ya existe un curso registrado con el número de identificacion: ' + informacionCurso.id;
+    }
+    return respuesta;
+});
+
+
+
+
+
+
+
+
+
 const consultarEstudiantesPorCurso = () => {
     try {
         listaUsuriosPorCurso = require('../../usuariosPorCurso.json');
@@ -156,3 +186,87 @@ const guardarUsuarioPorCurso = () => {
        if (err) throw (err);
     });
 }
+
+
+const guardarCurso = () => {
+    let datos = JSON.stringify(listaCursos);
+    fs.writeFile('cursos.json', datos, (err) => {
+       if (err) throw (err);
+    });
+}
+
+/*
+const mostrar = () => {
+    consultarUsuariosRegistrados();
+    console.log('Notas de los estudiantes');
+    listaEstudiantes.forEach(estudiante => {
+        console.log(estudiante.nombre);
+        console.log('notas ');
+        console.log(' matematicas' + estudiante.matematicas);
+        console.log(' ingles ' + estudiante.ingles);
+        console.log(' programacion ' + estudiante.programacion + '\n\r');
+    });
+}
+
+const mostrarest = (nombre) => {
+    consultarUsuariosRegistrados();
+    let est = listaEstudiantes.find(buscar => buscar.nombre == nombre)
+    if(!est){
+        console.log('No existe este estudiante');
+    }else {
+        console.log(est.nombre);
+        console.log('notas ');
+        console.log(' matematicas' + est.matematicas);
+        console.log(' ingles ' + est.ingles);
+        console.log(' programacion ' + est.programacion + '\n\r');
+    }
+}
+
+const mostrarmat = () => {
+    consultarUsuariosRegistrados();
+    let ganan = listaEstudiantes.filter(mat => mat.matematicas >= 3);
+    if (ganan.length == 0) {
+        console.log('ningun estudiante va ganando');
+    } else {
+        ganan.forEach(estudiante => {
+        console.log(estudiante.nombre);
+        console.log('notas ');
+        console.log(' matematicas' + estudiante.matematicas);
+        console.log(' ingles ' + estudiante.ingles);
+        console.log(' programacion ' + estudiante.programacion + '\n\r');
+        });       
+    }
+}
+
+const actualizar = (nombre, asignatura, calificacion) => {
+    consultarUsuariosRegistrados(); // cargamos lo que hay dentro del Json
+    let encontrado = listaEstudiantes.find(buscar => buscar.nombre == nombre)
+    if(!encontrado) {
+        console.log('El estudiante no existe');
+    } else{
+        encontrado[asignatura] = calificacion;  //asumiendo que asignatura existe. (hay que poner validacion para esto).
+        guardar();
+    }
+}
+
+const eliminar = (nombre) => {
+    consultarUsuariosRegistrados();
+    let nuevo = listaEstudiantes.filter(mat => mat.nombre != nombre);
+    if (nuevo.length == listaEstudiantes.length) {
+        console.log('No existe un estudiante con el nombre indicado');
+    } else {
+        listaEstudiantes = nuevo;
+        guardar();
+    }
+
+}
+
+module.exports = {
+    crear,
+    mostrar,
+    mostrarest,
+    mostrarmat,
+    actualizar,
+    eliminar
+}
+*/

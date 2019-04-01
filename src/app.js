@@ -61,6 +61,30 @@ app.post('/resultadoInscripcion', (req, res) => {
     });
 });
 
+app.get('/crearCurso', (req, res) => {
+    res.render('../template/views/crearCurso.hbs');
+});
+
+
+//resultadoCreacionCurso
+app.post('/resultadoCreacionCurso', (req, res) => {
+    res.render('../template/views/resultadoCreacionCurso.hbs',{
+        informacionCurso: {
+            id:             req.body.idCurso,
+            nombre:         req.body.nombre,
+            descripcion:    req.body.descripcion,
+            valor:          req.body.valor,
+            modalidad:      req.body.listaModalidad,
+            intensidad:     req.body.intesidad,
+            estado:         'Disponible'
+        }
+    });
+});
+    
+
+
+
+
 
 
 app.get('*', (req, res) => {
