@@ -6,13 +6,5 @@
         "nombreUsuario": "Sebastian",
         "email": "sebas@ejemplo.com",
         "telefono": "234564"
-    },
-    {
-        "idCurso": 1,
-        "nombreCurso": "Matemáticas",
-        "idUsuario": "2",
-        "nombreUsuario": "Juan",
-        "email": "micorreo@hotmal.com",
-        "telefono": "2345678"
     }
 ]

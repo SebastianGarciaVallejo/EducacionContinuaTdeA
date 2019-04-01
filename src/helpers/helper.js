@@ -81,16 +81,8 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
     return mensaje;
 });
 
-
-
-
-
-
-
 hbs.registerHelper('crearCurso', (informacionCurso)=>{
-    console.log(informacionCurso);
     consultarCursos();
-    console.log(listaCursos);
     let respuesta = '';
     let duplicado = listaCursos.find(registro => registro.id == informacionCurso.id)
     if(!duplicado){
@@ -103,13 +95,100 @@ hbs.registerHelper('crearCurso', (informacionCurso)=>{
     return respuesta;
 });
 
+hbs.registerHelper('listar2', () => {
+    consultarCursos();
+    const listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
+    let texto = '<div class="accordion" id="accordionAdminCurs">';
+    i = 1;
+
+    listaFiltrada.forEach(curso => {
+        texto = texto +
+            `<div class="card">
+                <div class="card-header" id="heading${i}">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" 
+                            data-target="#collapse${i}" aria-expanded="true" 
+                            aria-controls="collapse${i}">
+                            ${curso.nombre}
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordionAdminCurs">
+                    <div class="card-body">
+                        <form class="form-inline" action="cerrarCurso" method="post">
+                        <input class="form-control" name="idCursoCerrado" value=${curso.id} type="hidden">
+                            <table class='table table-striped' name="tabla">
+                                <thead class='thead-dark'>
+                                    <th>id</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Correo</th>
+                                    <th>Telefono</th>
+                                    <th>Eliminar</th>
+                                </thead>
+                                <tbody>`
+                                    + estudianteMatriculado(curso.id) +
+                                `</tbody> 
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>`;
+        i = i + 1;
+    })
+    texto = texto + '</div>';
+    return texto;
+});
+
+let estudianteMatriculado = (idCurso) => {
+    let texto = '';
+    consultarEstudiantesPorCurso();
+    consultarUsuariosRegistrados();
+    
+    let listaFiltrada = listaUsuriosPorCurso.filter(registro => registro.idCurso === idCurso);
+
+    listaFiltrada.forEach(usuario => {
+        let estudiante = listaUsuarios.find(user => user.id === usuario.idUsuario)
+        texto = texto +
+            '<tr>' +
+            '<td>' + estudiante.id + '</td>' +
+            '<td>' + estudiante.primerNombre + ' ' + estudiante.segundoNombre + ' ' 
+                  + estudiante.primerApellido + ' ' + estudiante.segundoApellido  + '</td>' +
+            '<td>' + estudiante.email + '</td>' +
+            '<td>' + estudiante.telefono + '</td>' +
+            '<td>' + '<button type="submit" name="button" class="btn btn-danger">Cerrar Curso<i class="fa fa-angle-right"></i></button>'+ '</td>' +
+            '<tr>'
+            + '<tr>'
+            + `<input class="form-control" name="idEstudiante" value=${estudiante.id} type="hidden"></input>`;
+            + '</tr>';
+    });
+    return texto;
+}
+
+hbs.registerHelper('borrarEstudiante', (infoMatricula) => {
+    consultarEstudiantesPorCurso();
+    let mensaje = '';
+    let registro = listaUsuriosPorCurso.filter(mat => mat.idCurso != infoMatricula.idCurso && 
+                                                    mat.idUsuario != infoMatricula.idEstudiante);
+    if (registro.length == listaUsuriosPorCurso.length) {
+        mensaje = 'No existe un estudiante con el nombre indicado';
+    } else {
+        listaUsuriosPorCurso = registro;
+        guardarUsuarioPorCurso();
+        mensaje = 'El ha eliminado el alumno del curso satisfactoriamente';
+    }
+    return mensaje;
+});
 
 
-
-
-
-
-
+const eliminar = (nombre) => {
+    consultarUsuariosRegistrados();
+    let nuevo = listaEstudiantes.filter(mat => mat.nombre != nombre);
+    if (nuevo.length == listaEstudiantes.length) {
+    } else {
+        listaEstudiantes = nuevo;
+        guardar();
+    }
+}
 
 const consultarEstudiantesPorCurso = () => {
     try {
@@ -194,79 +273,3 @@ const guardarCurso = () => {
        if (err) throw (err);
     });
 }
-
-/*
-const mostrar = () => {
-    consultarUsuariosRegistrados();
-    console.log('Notas de los estudiantes');
-    listaEstudiantes.forEach(estudiante => {
-        console.log(estudiante.nombre);
-        console.log('notas ');
-        console.log(' matematicas' + estudiante.matematicas);
-        console.log(' ingles ' + estudiante.ingles);
-        console.log(' programacion ' + estudiante.programacion + '\n\r');
-    });
-}
-
-const mostrarest = (nombre) => {
-    consultarUsuariosRegistrados();
-    let est = listaEstudiantes.find(buscar => buscar.nombre == nombre)
-    if(!est){
-        console.log('No existe este estudiante');
-    }else {
-        console.log(est.nombre);
-        console.log('notas ');
-        console.log(' matematicas' + est.matematicas);
-        console.log(' ingles ' + est.ingles);
-        console.log(' programacion ' + est.programacion + '\n\r');
-    }
-}
-
-const mostrarmat = () => {
-    consultarUsuariosRegistrados();
-    let ganan = listaEstudiantes.filter(mat => mat.matematicas >= 3);
-    if (ganan.length == 0) {
-        console.log('ningun estudiante va ganando');
-    } else {
-        ganan.forEach(estudiante => {
-        console.log(estudiante.nombre);
-        console.log('notas ');
-        console.log(' matematicas' + estudiante.matematicas);
-        console.log(' ingles ' + estudiante.ingles);
-        console.log(' programacion ' + estudiante.programacion + '\n\r');
-        });       
-    }
-}
-
-const actualizar = (nombre, asignatura, calificacion) => {
-    consultarUsuariosRegistrados(); // cargamos lo que hay dentro del Json
-    let encontrado = listaEstudiantes.find(buscar => buscar.nombre == nombre)
-    if(!encontrado) {
-        console.log('El estudiante no existe');
-    } else{
-        encontrado[asignatura] = calificacion;  //asumiendo que asignatura existe. (hay que poner validacion para esto).
-        guardar();
-    }
-}
-
-const eliminar = (nombre) => {
-    consultarUsuariosRegistrados();
-    let nuevo = listaEstudiantes.filter(mat => mat.nombre != nombre);
-    if (nuevo.length == listaEstudiantes.length) {
-        console.log('No existe un estudiante con el nombre indicado');
-    } else {
-        listaEstudiantes = nuevo;
-        guardar();
-    }
-
-}
-
-module.exports = {
-    crear,
-    mostrar,
-    mostrarest,
-    mostrarmat,
-    actualizar,
-    eliminar
-}
-*/

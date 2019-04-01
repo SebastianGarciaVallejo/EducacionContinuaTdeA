@@ -65,8 +65,6 @@ app.get('/crearCurso', (req, res) => {
     res.render('../template/views/crearCurso.hbs');
 });
 
-
-//resultadoCreacionCurso
 app.post('/resultadoCreacionCurso', (req, res) => {
     res.render('../template/views/resultadoCreacionCurso.hbs',{
         informacionCurso: {
@@ -81,8 +79,18 @@ app.post('/resultadoCreacionCurso', (req, res) => {
     });
 });
     
+app.get('/verInscritos', (req, res) => {
+    res.render('../template/views/inscritos.hbs');
+});
 
-
+app.post('/cerrarCurso', (req, res) => {
+    res.render('../template/views/resultadoBorrarEstudiante.hbs',{
+        info: {
+            idCurso:        req.body.idCursoCerrado,
+            idEstudiante:   req.body.idEstudiante
+        }
+    });
+});
 
 
 
