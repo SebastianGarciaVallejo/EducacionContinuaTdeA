@@ -60,23 +60,30 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
         mensaje = 'La persona con el documento no esta inscrita.';
     }
     let informacionCurso = obtenerInformacionCurso(idCurso);
-    let usuarioXCurso = {
-        idCurso:        informacionCurso[0].id,
-        nombreCurso:    informacionCurso[0].nombre,
-        idUsuario:      informacionUsuario[0].id,
-        nombreUsuario:  informacionUsuario[0].primerNombre,
-        email:          informacionUsuario[0].email,
-        telefono:       informacionUsuario[0].telefono
-    };
-    let duplicado = listaUsuriosPorCurso.find(registro => registro.idCurso == usuarioXCurso.idCurso
-                                                    && registro.idUsuario == usuarioXCurso.idUsuario)
-    if(!duplicado){
-        listaUsuriosPorCurso.push(usuarioXCurso);
-        guardarUsuarioPorCurso();
-        mensaje = "Se ha inscrito en el curso satisfactoriamente.";
-    }else {
-        mensaje = 'El aspirante ' + usuarioXCurso.nombreUsuario + ' con número de identificación ' +
-                  usuarioXCurso.idUsuario + ' ya esta inscrito en el curso ' + usuarioXCurso.nombreCurso;
+    console.log(informacionCurso);
+    console.log(informacionUsuario);
+
+    if(informacionCurso.length > 0 && informacionUsuario.length > 0){
+        let duplicado = listaUsuriosPorCurso.find(registro => registro.idCurso == informacionCurso[0].id
+            && registro.idUsuario == informacionUsuario[0].id)
+        if(!duplicado) {
+            let usuarioXCurso = {
+                idCurso:        informacionCurso[0].id,
+                nombreCurso:    informacionCurso[0].nombre,
+                idUsuario:      informacionUsuario[0].id,
+                nombreUsuario:  informacionUsuario[0].primerNombre,
+                email:          informacionUsuario[0].email,
+                telefono:       informacionUsuario[0].telefono
+            };
+            listaUsuriosPorCurso.push(usuarioXCurso);
+            guardarUsuarioPorCurso();
+            mensaje = "Se ha inscrito en el curso satisfactoriamente.";
+        } else {
+            mensaje = 'El aspirante ' + usuarioXCurso.nombreUsuario + ' con número de identificación ' +
+            usuarioXCurso.idUsuario + ' ya esta inscrito en el curso ' + usuarioXCurso.nombreCurso;
+        }
+    }else{
+        mensaje = 'No existe un estudiante registrado en el sistema con la identificacion ingresada';
     }
     return mensaje;
 });
