@@ -25,6 +25,18 @@ app.get('/', (req, res) => {
     res.render('../template/views/index.hbs');
 });
 
+app.get('/login', (req, res) => {
+    res.render('../template/views/login.hbs');
+});
+
+app.post('/validarLogin', (req, res) => {
+    res.render('../template/views/index.hbs', {
+        usuario: req.body.usuario,
+        contrasena: req.body.contrasena,
+        operacion: 'Login'   
+    });
+});
+
 app.get('/registroUsuario', (req, res) => {
     res.render('../template/views/registroUsuario.hbs');
 });

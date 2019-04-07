@@ -3,6 +3,83 @@ const fs = require('fs');
 listaUsuarios = [];
 listaCursos = [];
 listaUsuriosPorCurso = [];
+usuarioLogin = undefined;
+contrasenaLogin = undefined;
+
+hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
+
+    if(operacion == 'Login'){
+        usuarioLogin = usuario;
+        contrasenaLogin = contrasena;
+    }
+    let menu = '';
+    let abrirMenu =`<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">`;
+
+    let inicio=`<li class="nav-item active">
+                    <a class="nav-link" href="/">INICIO<span class="sr-only">(current)</span></a>
+                </li>`;
+
+    let login=  `<li class="nav-item">
+                    <a class="nav-link" href="/login">LOGIN</a>
+                </li>`;
+
+    let crearCurso=`<li class="nav-item">
+                        <a class="nav-link" href="/crearCurso">CREAR CURSO</a>
+                    </li>`;
+
+    let registrarme=`<li class="nav-item">
+                        <a class="nav-link" href="/registroUsuario">REGISTRARME</a>
+                    </li>`;
+
+    let verCursos=  `<li class="nav-item">
+                        <a class="nav-link" href="/verCursos">VER CURSOS</a>
+                    </li>`;
+
+    let inscribirCurso= `<li class="nav-item">
+                            <a class="nav-link" href="/inscribirCurso">INSCRIBIR</a>
+                        </li>`;
+
+    let verInscritos =  `<li class="nav-item">
+                            <a class="nav-link" href="/verInscritos">VER INSCRITOS</a>
+                        </li>`;
+
+    let cerrarMenu=                     `</ul>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>`;
+
+    if(usuarioLogin != undefined && contrasenaLogin != undefined)
+    {
+        let informacionUsuario = obtenerInformacionUsuario(usuarioLogin);
+        if(informacionUsuario.length == 0){
+            console.log('Menu Inicial');
+            menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
+        }else {
+            if(informacionUsuario[0].tipo == 'Aspirante'){
+                console.log('Menu Aspirante');
+                menu = abrirMenu + inicio + verCursos + inscribirCurso + /*eliminarInscripcion*/ cerrarMenu;
+            }else if(informacionUsuario[0].tipo == 'Coordinador'){
+                console.log('Menu Coordinador');
+                menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + /*ModificarRolUsuario*/ cerrarMenu;
+            }
+        }
+    }else{
+        console.log('Menu Inicial');
+        menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
+    }
+    return menu;
+});
 
 hbs.registerHelper('registarUsuario', (usuario) => {
     let respuesta = insertarUsuario(usuario);
@@ -79,8 +156,8 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
             guardarUsuarioPorCurso();
             mensaje = "Se ha inscrito en el curso satisfactoriamente.";
         } else {
-            mensaje = 'El aspirante ' + usuarioXCurso.nombreUsuario + ' con número de identificación ' +
-            usuarioXCurso.idUsuario + ' ya esta inscrito en el curso ' + usuarioXCurso.nombreCurso;
+            mensaje = 'El aspirante ' + informacionUsuario[0].primerNombre + ' con número de identificación ' +
+            informacionUsuario[0].id + ' ya esta inscrito en el curso ' + informacionCurso[0].nombre;
         }
     }else{
         mensaje = 'No existe un estudiante registrado en el sistema con la identificacion ingresada';
