@@ -5,6 +5,7 @@ listaCursos = [];
 listaUsuriosPorCurso = [];
 usuarioLogin = undefined;
 contrasenaLogin = undefined;
+rol = undefined;
 
 hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
 
@@ -68,9 +69,11 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
         }else {
             if(informacionUsuario[0].tipo == 'Aspirante'){
                 console.log('Menu Aspirante');
+                rol = 'Aspirante';
                 menu = abrirMenu + inicio + verCursos + inscribirCurso + /*eliminarInscripcion*/ cerrarMenu;
             }else if(informacionUsuario[0].tipo == 'Coordinador'){
                 console.log('Menu Coordinador');
+                rol = 'Coordinador';
                 menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + /*ModificarRolUsuario*/ cerrarMenu;
             }
         }
@@ -88,6 +91,12 @@ hbs.registerHelper('registarUsuario', (usuario) => {
 
 hbs.registerHelper('listarCursos', () => {
     consultarCursos();
+    let listaFiltrada =[];
+    if(rol == 'Aspirante') {
+        listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
+    }else if (rol == 'Coordinador'){
+        listaFiltrada = listaCursos;
+    }
     let texto = '<table class="table table-striped table-hover table-dark">\
                     <thead class="thead-dark">\
                         <th>Id</th>\
@@ -99,8 +108,7 @@ hbs.registerHelper('listarCursos', () => {
                         <th>Estado</th>\
                     </thead>\
                     <tbody>';
-
-    listaCursos.forEach(curso => {
+    listaFiltrada.forEach(curso => {
         texto = texto +
                 '<tr>' +
                 '<td>' + curso.id + '</td>' +
