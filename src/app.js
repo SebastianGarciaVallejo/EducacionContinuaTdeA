@@ -104,8 +104,25 @@ app.post('/cerrarCurso', (req, res) => {
     });
 });
 
+app.get('/administrarUsuarios', (req, res) => {
+    res.render('../template/views/administrarUsuarios.hbs');
+});
 
-
+app.post('/administrarUsuarios', (req, res) => {
+    if(req.body.operacion == 'enviar'){
+        res.render('../template/views/administrarUsuarios.hbs', {
+            idUsuario: req.body.idUsuario,
+            operacion: req.body.operacion,
+            datosActualizar: req.body
+        });
+    }else{
+        res.render('../template/views/administrarUsuarios.hbs', {
+            idUsuario: req.body.idUsuario,
+            operacion: req.body.operacion,
+            datosActualizar: ''
+        });
+    }
+});
 
 app.get('*', (req, res) => {
     res.render('../template/views/error.hbs');

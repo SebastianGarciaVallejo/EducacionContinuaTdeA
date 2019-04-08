@@ -52,6 +52,10 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
     let verInscritos =  `<li class="nav-item">
                             <a class="nav-link" href="/verInscritos">VER INSCRITOS</a>
                         </li>`;
+    
+    let administrarUsuarios=`<li class="nav-item">
+                                <a class="nav-link" href="/administrarUsuarios">ADMINISTRAR USUARIOS</a>
+                            </li>`;
 
     let cerrarMenu=                     `</ul>
                                     </div>
@@ -74,7 +78,7 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
             }else if(informacionUsuario[0].tipo == 'Coordinador'){
                 console.log('Menu Coordinador');
                 rol = 'Coordinador';
-                menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + /*ModificarRolUsuario*/ cerrarMenu;
+                menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + administrarUsuarios + cerrarMenu;
             }
         }
     }else{
@@ -84,10 +88,12 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
     return menu;
 });
 
+
 hbs.registerHelper('registarUsuario', (usuario) => {
     let respuesta = insertarUsuario(usuario);
     return respuesta;
 });
+
 
 hbs.registerHelper('listarCursos', () => {
     consultarCursos();
@@ -124,6 +130,7 @@ hbs.registerHelper('listarCursos', () => {
     return texto;
 });
 
+
 hbs.registerHelper('listaDesplegableCursos', () => {
     consultarCursos();
     let texto =`<div class="form-group col-md-3">
@@ -137,6 +144,7 @@ hbs.registerHelper('listaDesplegableCursos', () => {
     return texto;
 });
 
+
 hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
     consultarEstudiantesPorCurso();
     let mensaje = 'Todo Bien';
@@ -145,8 +153,6 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
         mensaje = 'La persona con el documento no esta inscrita.';
     }
     let informacionCurso = obtenerInformacionCurso(idCurso);
-    console.log(informacionCurso);
-    console.log(informacionUsuario);
 
     if(informacionCurso.length > 0 && informacionUsuario.length > 0){
         let duplicado = listaUsuriosPorCurso.find(registro => registro.idCurso == informacionCurso[0].id
@@ -173,6 +179,7 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
     return mensaje;
 });
 
+
 hbs.registerHelper('crearCurso', (informacionCurso)=>{
     consultarCursos();
     let respuesta = '';
@@ -187,12 +194,12 @@ hbs.registerHelper('crearCurso', (informacionCurso)=>{
     return respuesta;
 });
 
+
 hbs.registerHelper('listar2', () => {
     consultarCursos();
     const listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
     let texto = '<div class="accordion" id="accordionAdminCurs">';
     i = 1;
-
     listaFiltrada.forEach(curso => {
         texto = texto +
             `<div class="card">
@@ -231,11 +238,134 @@ hbs.registerHelper('listar2', () => {
     return texto;
 });
 
+
+hbs.registerHelper('administrarUsuario', (idUsuario, operacion, datosActualizar)=>{
+    let html = 
+            `<br>
+            <form action="/administrarUsuarios" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-3"></div>
+
+                    <div class="form-group col-md-2">
+                    <label for="inputEmail4">Identificacion Usuario:</label>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                    <input type="text" class="form-control" name="idUsuario" required>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-primary" name="operacion" value="consultar">Consultar</button>
+                    </div>
+
+                    <div class="form-group col-md-3"></div>   
+                </div>
+            </form>`;
+
+    if(operacion == 'consultar') {
+        let datosUsuario = obtenerInformacionUsuario(idUsuario);
+
+        if(datosUsuario.length > 0) {
+            let listaRoles = ['Aspirante','Profesor', 'Coordinador'];
+            let opcionesLista='';
+
+            listaRoles.forEach(rol => {
+                if(rol == datosUsuario[0].tipo){
+                    opcionesLista = opcionesLista + `<option value="${rol}" selected>${rol}</option>`;
+                }
+                else{
+                    opcionesLista = opcionesLista + `<option value="${rol}">${rol}</option>`;
+                }
+            });
+            html = 
+            `<br>
+            <form action="/administrarUsuarios" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-2"></div>
+                    <div class="form-group col-md-2">
+                    <label for="inputEmail4">Primer Nombre</label>
+                    <input type="text" class="form-control" name="nombre1" value="${datosUsuario[0].primerNombre}" required>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                    <label for="inputPassword4">Segundo Nombre</label>
+                    <input type="text" class="form-control" name="nombre2" value="${datosUsuario[0].segundoNombre}">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                    <label for="inputPassword4">Primer Apellido</label>
+                    <input type="text" class="form-control" name="apellido1" value="${datosUsuario[0].primerApellido}" required>
+                    </div>
+                    <div class="form-group col-md-2"></div>
+                    <br><br>        
+                </div>
+
+                <div class="form-row">
+                <div class="form-group col-md-2"></div>
+                <div class="form-group col-md-2">
+                    <label for="inputEmail4">Segundo Apellido</label>
+                    <input type="text" class="form-control" name="apellido2" value="${datosUsuario[0].segundoApellido}" required>
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-2">
+                    <label for="inputPassword4">Documento de identidad</label>
+                    <input type="number" class="form-control" required name="documento" value="${datosUsuario[0].id}">
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-2">
+                    <label for="inputPassword4">Telefono</label>
+                    <input type="number" class="form-control" name="telefono" value="${datosUsuario[0].telefono}">
+                </div>
+                <div class="form-group col-md-2"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-2"></div>
+                    <div class="form-group col-md-2">
+                    <label for="inputPassword4">Email</label>
+                    <input type="email" class="form-control" name="email" required value="${datosUsuario[0].email}">
+                    </div> 
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Direccón</label>
+                        <input type="text" class="form-control" name="direccion" value="${datosUsuario[0].direccion}">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Rol</label>
+                        <select class="form-control" name="listaDesplegable" required>
+                            ${opcionesLista}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-5"></div>
+                    <div class="form-group col-md-1">
+                        <button class="btn btn-primary" name="operacion" value="enviar">Enviar</button>
+                    </div>      
+                </div>
+            </form>`;
+        }else{
+            html = `<div class="alert alert-danger" role="alert">No exite un usuario con el id indicado</div>` + html;
+        }
+    }else if (operacion == 'enviar') {
+        let actualizacionExitosa = actualizarUsuario(datosActualizar);
+        if(actualizacionExitosa) {
+            html = `<div class="alert alert-success" role="alert">La información del usuario ha sido actualizada!</div>` + html;
+        }
+        else{
+            html = `<div class="alert alert-danger" role="alert">Ocurrio un error actualizando la información</div>` + html;
+        }
+    }
+    return html;
+});
+
+
 let estudianteMatriculado = (idCurso) => {
     let texto = '';
     consultarEstudiantesPorCurso();
     consultarUsuariosRegistrados();
-    
     let listaFiltrada = listaUsuriosPorCurso.filter(registro => registro.idCurso === idCurso);
 
     listaFiltrada.forEach(usuario => {
@@ -256,6 +386,7 @@ let estudianteMatriculado = (idCurso) => {
     return texto;
 }
 
+
 hbs.registerHelper('borrarEstudiante', (infoMatricula) => {
     consultarEstudiantesPorCurso();
     let mensaje = '';
@@ -272,15 +403,28 @@ hbs.registerHelper('borrarEstudiante', (infoMatricula) => {
 });
 
 
-const eliminar = (nombre) => {
+const actualizarUsuario = (datosActualizar) => {
     consultarUsuariosRegistrados();
-    let nuevo = listaEstudiantes.filter(mat => mat.nombre != nombre);
-    if (nuevo.length == listaEstudiantes.length) {
-    } else {
-        listaEstudiantes = nuevo;
-        guardar();
+    let encontrado = listaUsuarios.find(buscar => buscar.id == datosActualizar.documento)
+    let seActualizo = false;
+    if(!encontrado) {
+        seActualizo = false;
+    } else{
+        encontrado.id = datosActualizar.documento,
+        encontrado.primerNombre = datosActualizar.nombre1,
+        encontrado.segundoNombre = datosActualizar.nombre2,
+        encontrado.primerApellido = datosActualizar.apellido1,
+        encontrado.segundoApellido = datosActualizar.apellido2,
+        encontrado.telefono = datosActualizar.telefono,
+        encontrado.email = datosActualizar.email,
+        encontrado.direccion = datosActualizar.direccion,
+        encontrado.tipo = datosActualizar.listaDesplegable
+        guardarUsuario();
+        seActualizo = true;
     }
+    return seActualizo;
 }
+
 
 const consultarEstudiantesPorCurso = () => {
     try {
@@ -290,6 +434,7 @@ const consultarEstudiantesPorCurso = () => {
     }
 }
 
+
 const consultarCursos = () => {
     try {
         listaCursos = require('../../cursos.json');
@@ -298,11 +443,13 @@ const consultarCursos = () => {
     }
 }
 
+
 const obtenerInformacionCurso = (idCurso) => {
     consultarCursos();
     let curso = listaCursos.filter(cur => cur.id == idCurso);
     return curso;
 }
+
 
 const consultarUsuariosRegistrados = () => {
     try {
@@ -312,11 +459,13 @@ const consultarUsuariosRegistrados = () => {
     }
 }
 
+
 const obtenerInformacionUsuario = (idUsuario) => {
     consultarUsuariosRegistrados();
     let usuario = listaUsuarios.filter(usr => usr.id == idUsuario);
     return usuario;
 }
+
 
 const insertarUsuario = (usuarioAInsertar) => {
     consultarUsuariosRegistrados();
@@ -344,12 +493,14 @@ const insertarUsuario = (usuarioAInsertar) => {
     }
 }
 
+
 const guardarUsuario = () => {
     let datos = JSON.stringify(listaUsuarios);
     fs.writeFile('usuarios.json', datos, (err) => {
        if (err) throw (err);
     });
 }
+
 
 const guardarUsuarioPorCurso = () => {
     let datos = JSON.stringify(listaUsuriosPorCurso);
