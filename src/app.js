@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
+const port = process.env.port || 3000;
 require('./helpers/helper.js')
 
 const directoriopublico = path.join(__dirname, '../public');
@@ -29,6 +30,9 @@ app.get('/registroUsuario', (req, res) => {
     res.render('../template/views/registroUsuario.hbs');
 });
 
+app.listen(port,() => {
+    console.log('Servidor en el puerto ' + port);
+});
 app.post('/resultadoOperacion', (req, res) => {
     res.render('../template/views/resultadoOperacion.hbs',{
         usuario:{
