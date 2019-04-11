@@ -19,7 +19,7 @@
     },
     {
         "id": 3,
-        "nombre": "Progamación",
+        "nombre": "Programación",
         "descripcion": "Curso basico de programación",
         "valor": 900000,
         "modalidad": "Presencial",
