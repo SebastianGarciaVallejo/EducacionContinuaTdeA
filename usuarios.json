@@ -1,6 +1,6 @@
 [
     {
-        "id": "1128",
+        "id": 1128,
         "primerNombre": "Administrador",
         "segundoNombre": "",
         "primerApellido": "Garcia",
@@ -11,7 +11,7 @@
         "tipo": "Coordinador"
     },
     {
-        "id": "1",
+        "id": 1,
         "primerNombre": "Sebastian",
         "segundoNombre": "",
         "primerApellido": "Garcia",
@@ -22,7 +22,7 @@
         "tipo": "Aspirante"
     },
     {
-        "id": "2",
+        "id": 2,
         "primerNombre": "Juan",
         "segundoNombre": "Esteban",
         "primerApellido": "Carvajal",
@@ -33,7 +33,7 @@
         "tipo": "Aspirante"
     },
     {
-        "id": "3",
+        "id": 3,
         "primerNombre": "Carlos",
         "segundoNombre": "Esteban",
         "primerApellido": "Gallego",
@@ -44,7 +44,7 @@
         "tipo": "Aspirante"
     },
     {
-        "id": "4",
+        "id": 4,
         "primerNombre": "Maria",
         "segundoNombre": "",
         "primerApellido": "Restrepo",
@@ -55,7 +55,7 @@
         "tipo": "Aspirante"
     },
     {
-        "id": "5",
+        "id": 5,
         "primerNombre": "Diana",
         "segundoNombre": "Carolina",
         "primerApellido": "Lopez",
@@ -66,7 +66,7 @@
         "tipo": "Aspirante"
     },
     {
-        "id": "6",
+        "id": 6,
         "primerNombre": "Yadira",
         "segundoNombre": "",
         "primerApellido": "Lopera",
@@ -74,6 +74,28 @@
         "telefono": "111111",
         "email": "yadi.la@hotmail.com",
         "direccion": "carrera 70 interior 302",
+        "tipo": "Aspirante"
+    },
+    {
+        "id": 7,
+        "primerNombre": "Jorge",
+        "segundoNombre": "Mario",
+        "primerApellido": "Trujillo",
+        "segundoApellido": "Peralta",
+        "telefono": "1234567",
+        "email": "jorge@micorreo.com",
+        "direccion": "avenida siempre viva",
+        "tipo": "Aspirante"
+    },
+    {
+        "id": 8,
+        "primerNombre": "Jesus",
+        "segundoNombre": "David",
+        "primerApellido": "Rodriguez",
+        "segundoApellido": "Perea",
+        "telefono": "123124341",
+        "email": "david.chucho@hotmail.com",
+        "direccion": "calle 80",
         "tipo": "Aspirante"
     }
 ]

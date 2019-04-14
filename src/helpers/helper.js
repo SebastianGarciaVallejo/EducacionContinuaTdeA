@@ -49,6 +49,10 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
                             <a class="nav-link" href="/inscribirCurso">INSCRIBIR</a>
                         </li>`;
 
+    let eliminarInscripcion=`<li class="nav-item">
+                                <a class="nav-link" href="/eliminarInscripcion">ELIMINAR INSCRIPCIÓN</a>
+                            </li>`;
+
     let verInscritos =  `<li class="nav-item">
                             <a class="nav-link" href="/verInscritos">VER INSCRITOS</a>
                         </li>`;
@@ -69,12 +73,12 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
         let informacionUsuario = obtenerInformacionUsuario(usuarioLogin);
         if(informacionUsuario.length == 0){
             console.log('Menu Inicial');
-            menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
+            menu = abrirMenu + inicio + registrarme + login + verCursos + cerrarMenu;
         }else {
             if(informacionUsuario[0].tipo == 'Aspirante'){
                 console.log('Menu Aspirante');
                 rol = 'Aspirante';
-                menu = abrirMenu + inicio + verCursos + inscribirCurso + /*eliminarInscripcion*/ cerrarMenu;
+                menu = abrirMenu + inicio + verCursos + inscribirCurso + eliminarInscripcion + cerrarMenu;
             }else if(informacionUsuario[0].tipo == 'Coordinador'){
                 console.log('Menu Coordinador');
                 rol = 'Coordinador';
@@ -83,7 +87,7 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
         }
     }else{
         console.log('Menu Inicial');
-        menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
+        menu = abrirMenu + inicio + registrarme + login + verCursos + cerrarMenu;
     }
     return menu;
 });
@@ -98,11 +102,12 @@ hbs.registerHelper('registarUsuario', (usuario) => {
 hbs.registerHelper('listarCursos', () => {
     consultarCursos();
     let listaFiltrada =[];
-    if(rol == 'Aspirante') {
-        listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
-    }else if (rol == 'Coordinador'){
+    if(rol == 'Coordinador') {
         listaFiltrada = listaCursos;
+    } else {
+        listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
     }
+
     let texto = '<table class="table table-striped table-hover table-dark">\
                     <thead class="thead-dark">\
                         <th>Id</th>\
@@ -142,6 +147,39 @@ hbs.registerHelper('listaDesplegableCursos', () => {
     });                
     texto = texto + `</select></div>`;
     return texto;
+});
+
+
+hbs.registerHelper('listarMisCursosAspirante', (idCurso) => {
+    consultarEstudiantesPorCurso();
+    let html = `<div class="form-group col-md-4">
+                    <label for="sel1">Estas inscrito en los siguientes cursos:</label>`;
+    let mensajeConfirmacion = '';
+
+    if(idCurso != undefined) {
+        let filtro = listaUsuriosPorCurso.filter(matricula => (matricula.idUsuario != usuarioLogin
+                                                         || matricula.idCurso != idCurso));
+        listaUsuriosPorCurso = filtro;
+        guardarUsuarioPorCurso();
+        mensajeConfirmacion = `<div class="alert alert-danger" role="alert">No exite un usuario</div>`;
+    }
+ 
+    let registro = listaUsuriosPorCurso.filter(matricula => matricula.idUsuario == usuarioLogin);
+    if (registro.length > 0) {
+        html = html + `<select class="form-control" name="listaDesplegable" required>`;
+        registro.forEach(matricula => {
+            html = html + `<option value="${matricula.idCurso}">${matricula.nombreCurso}</option>`;
+        }); 
+    }else{
+        html = html + `<select class="form-control" name="listaDesplegable" required  disabled>`;
+        html = html + `<option>Ninguno</option>`;
+    }
+    html = html + `</select>`;
+    if (mensajeConfirmacion != ''){
+        html = html + `<div class="alert alert-success" role="alert">Operación Exitosa!</div>`;
+    }
+    html  = html + `</div>`;
+    return html;
 });
 
 
@@ -471,7 +509,7 @@ const insertarUsuario = (usuarioAInsertar) => {
     consultarUsuariosRegistrados();
     let respuesta = '';
     let usuario = {
-        id: usuarioAInsertar.id,
+        id: Number(usuarioAInsertar.id),
         primerNombre: usuarioAInsertar.primerNombre,
         segundoNombre: usuarioAInsertar.segundoNombre,
         primerApellido: usuarioAInsertar.primerApellido,

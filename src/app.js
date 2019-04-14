@@ -80,7 +80,7 @@ app.get('/crearCurso', (req, res) => {
 app.post('/resultadoCreacionCurso', (req, res) => {
     res.render('../template/views/resultadoCreacionCurso.hbs',{
         informacionCurso: {
-            id:             req.body.idCurso,
+            id:             Number(req.body.idCurso),
             nombre:         req.body.nombre,
             descripcion:    req.body.descripcion,
             valor:          req.body.valor,
@@ -122,6 +122,17 @@ app.post('/administrarUsuarios', (req, res) => {
             datosActualizar: ''
         });
     }
+});
+
+app.get('/eliminarInscripcion', (req, res) => {
+    res.render('../template/views/eliminarInscripcion.hbs');
+});
+
+
+app.post('/eliminarInscripcion', (req, res) => {
+    res.render('../template/views/eliminarInscripcion.hbs', {
+        idCurso: req.body.listaDesplegable
+    });
 });
 
 app.get('*', (req, res) => {

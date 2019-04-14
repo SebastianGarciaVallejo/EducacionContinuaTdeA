@@ -72,11 +72,20 @@
         "estado": "Cerrado"
     },
     {
-        "id": "9",
+        "id": 9,
         "nombre": "Expresión Corporal",
         "descripcion": "Aprende a expresar mejor tus ideas.",
         "valor": "568000",
         "modalidad": "Virtual",
+        "intensidad": "26",
+        "estado": "Disponible"
+    },
+    {
+        "id": 10,
+        "nombre": "Estadística Descriptiva",
+        "descripcion": "Curso básico.",
+        "valor": "450000",
+        "modalidad": "Presencial",
         "intensidad": "26",
         "estado": "Disponible"
     }
