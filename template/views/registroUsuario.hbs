@@ -1,21 +1,18 @@
 {{>header}}
 
-{{{opcionesMenuPorRol usuario contrasena}}}
+{{{opcionesMenuPorRol usuario contrasena operacion tipo}}}
 <br>
 <div class="container">
     <form action="/resultadoOperacion" method="post">
         <div class="form-row">
-            <div class="form-group col-md-2"></div>
             <div class="form-group col-md-2">
               <label for="inputEmail4">Primer Nombre</label>
               <input type="text" class="form-control" name="nombre1" required>
             </div>
-            <div class="form-group col-md-1"></div>
             <div class="form-group col-md-2">
               <label for="inputPassword4">Segundo Nombre</label>
               <input type="text" class="form-control" name="nombre2">
             </div>
-            <div class="form-group col-md-1"></div>
             <div class="form-group col-md-2">
               <label for="inputPassword4">Primer Apellido</label>
               <input type="text" class="form-control" name="apellido1" required>
@@ -25,17 +22,14 @@
         </div>
 
         <div class="form-row">
-          <div class="form-group col-md-2"></div>
           <div class="form-group col-md-2">
             <label for="inputEmail4">Segundo Apellido</label>
             <input type="text" class="form-control" name="apellido2">
           </div>
-          <div class="form-group col-md-1"></div>
           <div class="form-group col-md-2">
             <label for="inputPassword4">Documento de identidad</label>
             <input type="number" class="form-control" required name="id">
           </div>
-          <div class="form-group col-md-1"></div>
           <div class="form-group col-md-2">
               <label for="inputPassword4">Telefono</label>
               <input type="number" class="form-control" name="telefono">
@@ -44,21 +38,21 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-2"></div>
-            <div class="form-group col-md-3">
-              <label for="inputPassword4">Email</label>
+            <div class="form-group col-md-2">
+              <label for="inputEmail">Email</label>
               <input type="email" class="form-control" name="email" required placeholder="email@ejemplo.com">
             </div> 
-            <div class="form-group col-md-2"></div>
-            <div class="form-group col-md-3">
-                <label for="inputEmail4">Direccón</label>
+            <div class="form-group col-md-2">
+                <label for="inputPassword">Contraseña</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputDireccion">Dirección</label>
                 <input type="text" class="form-control" name="direccion">
             </div>
-            <div class="form-group col-md-2"></div>
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-5"></div>
             <div class="form-group col-md-1">
                 <button class="btn btn-primary">Enviar</button>
             </div>      

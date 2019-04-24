@@ -1,13 +1,15 @@
-const hbs = require('hbs');
-const fs = require('fs'); 
-listaUsuarios = [];
-listaCursos = [];
-listaUsuriosPorCurso = [];
-usuarioLogin = undefined;
-contrasenaLogin = undefined;
-rol = undefined;
+const hbs               = require('hbs');
+const fs                = require('fs'); 
+listaUsuarios           = [];
+listaCursos             = [];
+listaUsuriosPorCurso    = [];
+usuarioLogin            = undefined;
+contrasenaLogin         = undefined;
+rol                     = undefined;
+const Estudiante            = require('./../../src/models/estudiante');
+const Curso                 = require('../models/curso');
 
-hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
+hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion,tipo) => {
 
     if(operacion == 'Login'){
         usuarioLogin = usuario;
@@ -44,15 +46,21 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
     let verCursos=  `<li class="nav-item">
                         <a class="nav-link" href="/verCursos">VER CURSOS</a>
                     </li>`;
-
+    let verCursosInscritos=  `<li class="nav-item">
+                        <a class="nav-link" href="/verCursosInscritos">VER CURSOS INSCRITOS</a>
+                    </li>`;
     let inscribirCurso= `<li class="nav-item">
                             <a class="nav-link" href="/inscribirCurso">INSCRIBIR</a>
                         </li>`;
-
+    let borrarCurso= `<li class="nav-item">
+                        <a class="nav-link" href="/borrarCurso">BORRAR CURSOS</a>
+                    </li>`;
     let verInscritos =  `<li class="nav-item">
                             <a class="nav-link" href="/verInscritos">VER INSCRITOS</a>
                         </li>`;
-    
+    let cerrarSession =  `<li class="nav-item">
+                            <a class="nav-link" href="/cerrarSession">CERRAR SESSION</a>
+                          </li>`;
     let administrarUsuarios=`<li class="nav-item">
                                 <a class="nav-link" href="/administrarUsuarios">ADMINISTRAR USUARIOS</a>
                             </li>`;
@@ -63,28 +71,19 @@ hbs.registerHelper('opcionesMenuPorRol', (usuario, contrasena, operacion) => {
                             </div>
                         </div>
                     </div>`;
-
-    if(usuarioLogin != undefined && contrasenaLogin != undefined)
-    {
-        let informacionUsuario = obtenerInformacionUsuario(usuarioLogin);
-        if(informacionUsuario.length == 0){
-            console.log('Menu Inicial');
-            menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
-        }else {
-            if(informacionUsuario[0].tipo == 'Aspirante'){
+    console.log("Este es el tipo: " + tipo);
+            if(tipo == 'Aspirante'){
                 console.log('Menu Aspirante');
                 rol = 'Aspirante';
-                menu = abrirMenu + inicio + verCursos + inscribirCurso + /*eliminarInscripcion*/ cerrarMenu;
-            }else if(informacionUsuario[0].tipo == 'Coordinador'){
+                menu = abrirMenu + inicio + verCursos + verCursosInscritos + inscribirCurso + borrarCurso +cerrarSession + cerrarMenu;
+            }else if(tipo == 'Coordinador'){
                 console.log('Menu Coordinador');
                 rol = 'Coordinador';
-                menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + administrarUsuarios + cerrarMenu;
+                menu = abrirMenu +  inicio + crearCurso + verCursos + verInscritos + administrarUsuarios + cerrarSession + cerrarMenu;
+            }else{
+                menu = abrirMenu + inicio + verCursos + registrarme + login + cerrarMenu;
             }
-        }
-    }else{
-        console.log('Menu Inicial');
-        menu = abrirMenu + inicio + registrarme + login + cerrarMenu;
-    }
+
     return menu;
 });
 
@@ -94,60 +93,50 @@ hbs.registerHelper('registarUsuario', (usuario) => {
     return respuesta;
 });
 
-
-hbs.registerHelper('listarCursos', () => {
-    consultarCursos();
-    let listaFiltrada =[];
-    if(rol == 'Aspirante') {
+hbs.registerHelper('listarCursos', (listaCursos) => {
+    //crearCursoBd();
+    console.log('Hallo' + listaCursos);
+    //consultarCursos();
+    let listaFiltrada = [];
+    if (rol == 'Aspirante' || typeof rol === 'undefined') {
+        console.log('Listando Cursos..');
+        console.log(listaCursos);
+        //console.log( listaCursos.filter(registro => registro.estado === "Disponible"));
         listaFiltrada = listaCursos.filter(registro => registro.estado === "Disponible");
-    }else if (rol == 'Coordinador'){
+        //console.log(listaCursos);
+    } else if (rol == 'Coordinador') {
         listaFiltrada = listaCursos;
     }
     let texto = '<table class="table table-striped table-hover table-dark">\
-                    <thead class="thead-dark">\
-                        <th>Id</th>\
-                        <th>Nombre</th>\
-                        <th>Descripción</th>\
-                        <th>Valor</th>\
-                        <th>Modalidad</th>\
-                        <th>Intensidad</th>\
-                        <th>Estado</th>\
-                    </thead>\
-                    <tbody>';
+            <thead class="thead-dark">\
+                <th>Id</th>\
+                <th>Nombre</th>\
+                <th>Descripción</th>\
+                <th>Valor</th>\
+                <th>Modalidad</th>\
+                <th>Intensidad</th>\
+                <th>Estado</th>\
+            </thead>\
+            <tbody>';
     listaFiltrada.forEach(curso => {
         texto = texto +
-                '<tr>' +
-                '<td>' + curso.id + '</td>' +
-                '<td>' + curso.nombre + '</td>' +
-                '<td>' + curso.descripcion + '</td>' +
-                '<td>' + curso.valor + '</td>' +
-                '<td>' + curso.modalidad + '</td>' +
-                '<td>' + curso.intensidad + '</td>' +
-                '<td>' + curso.estado + '</td>' +
-                '</tr>';
+            '<tr>' +
+            '<td>' + curso.id + '</td>' +
+            '<td>' + curso.nombre + '</td>' +
+            '<td>' + curso.descripcion + '</td>' +
+            '<td>' + curso.valor + '</td>' +
+            '<td>' + curso.modalidad + '</td>' +
+            '<td>' + curso.intensidad + '</td>' +
+            '<td>' + curso.estado + '</td>' +
+            '</tr>';
     });
     texto = texto + '</tbody></table>';
     return texto;
 });
 
-
-hbs.registerHelper('listaDesplegableCursos', () => {
-    consultarCursos();
-    let texto =`<div class="form-group col-md-3">
-                    <label for="sel1">Seleccionar curso:</label>
-                    <select class="form-control" required name="listaDesplegable">`;
-
-    listaCursos.forEach(curso => {
-        texto = texto + `<option value="${curso.id}">${curso.nombre}</option>`;
-    });                
-    texto = texto + `</select></div>`;
-    return texto;
-});
-
-
 hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
     consultarEstudiantesPorCurso();
-    let mensaje = 'Todo Bien';
+    console.log( 'IdUsuario: ' + idUsuario + 'IdCurso: '+idCurso);
     let informacionUsuario = obtenerInformacionUsuario(idUsuario);
     if(informacionUsuario.length == 0){
         mensaje = 'La persona con el documento no esta inscrita.';
@@ -181,17 +170,36 @@ hbs.registerHelper('inscibriUsuarioEnCurso', (idUsuario, idCurso) => {
 
 
 hbs.registerHelper('crearCurso', (informacionCurso)=>{
-    consultarCursos();
-    let respuesta = '';
-    let duplicado = listaCursos.find(registro => registro.id == informacionCurso.id)
-    if(!duplicado){
-        listaCursos.push(informacionCurso);
-        guardarCurso();
-        respuesta = "Se ha registrado el curso satisfactoriamente.";
-    }else {
-        respuesta = 'Ya existe un curso registrado con el número de identificacion: ' + informacionCurso.id;
-    }
-    return respuesta;
+    let respuesta = 'Curso creado de forma exitosa';
+    let curso = new Curso({
+        nombre      : informacionCurso.nombre,
+        id          : informacionCurso.id,
+        descripcion : informacionCurso.descripcion,
+        valor       : informacionCurso.valor,
+        intensidad  : informacionCurso.intensidad,
+        modalidad   : informacionCurso.modalidad,
+        estado      : informacionCurso.estado,
+    });
+    Curso.findOne({ id: informacionCurso.id }, (err, resultado) => {
+        
+        if(resultado){
+            console.log('entramos a resultado');
+            respuesta = 'Ya existe un curso con ese ID';
+
+        }else{
+            curso.save((err,resultado)=>{
+                if(err){
+                    console.log('Error' + err);
+                }else{
+                    respuesta = 'Se guardo con exito';
+                    console.log('Guardo con Exito' + resultado);
+                }
+            });
+        }
+
+        return respuesta;
+    })
+
 });
 
 
@@ -433,6 +441,27 @@ const consultarEstudiantesPorCurso = () => {
         listaUsuriosPorCurso = [];
     }
 }
+
+const crearCursoBd = () => {
+    let curso = new Curso({
+        nombre          : 'Programacion'        ,
+        id              : 123456                 ,
+        descripcion     : 'Curso De Programacion basica'   ,        
+        valor           : 210000                ,        
+        intensidad      : 63                    ,        
+        modalidad       : 'Presencial'          ,        
+        estado          : 'Cerrado'          ,        
+    });
+
+    curso.save((err,resultado)=>{
+        if(err){
+            console.log('Error');
+        }else{
+            console.log('Guardo con Exito');
+        }
+    });
+}
+
 
 
 const consultarCursos = () => {

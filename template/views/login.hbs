@@ -1,6 +1,6 @@
 {{>header}}
 
-{{{opcionesMenuPorRol usuario contrasena operacion}}}
+{{{opcionesMenuPorRol usuario contrasena operacion tipo}}}
 
 <div class="container">
     <div class="row">
@@ -9,7 +9,7 @@
             <br>
             <div class="panel panel-primary" style="border-style: solid">
                 <br>
-                <div class="panel-heading">Inicio de sesion.</div>
+                <div class="panel-heading">Inicio de sesion. {{nombre}}</div>
                     <div class="panel-body">
                         <br>
                         <form action="/validarLogin" method="post">

@@ -1,21 +1,16 @@
 {{>header}}
 
-{{{opcionesMenuPorRol usuario contrasena}}}
+{{{opcionesMenuPorRol usuario contrasena operacion tipo}}}
 <br>
 <div class="container">
     <form action="/resultadoInscripcion" method="post">
-        <div class="form-row">
+        <div class="form-group">
 
             <div class="form-group col-md-2"></div>
 
-            <div class="form-group col-md-2">
-              <label for="inputEmail4">Documento de identidad</label>
-              <input type="text" class="form-control" name="idUsuario" required placeholder="">
-            </div>
-
             <div class="form-group col-md-1"></div>
 
-            {{{listaDesplegableCursos}}}
+            {{{listadoCursos}}}
 
             <div class="form-group col-md-1"></div>
 

@@ -1,100 +1,29 @@
+//Require
+require('./config/config');
 const express = require('express');
-const app = express();
 const path = require('path');
-const hbs = require('hbs');
+const app = express();
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 5000;
-require('./helpers/helper.js')
-
-const directoriopublico = path.join(__dirname, '../public');
-const directoriopartials = path.join(__dirname, '../template/partials');
-const dirNode_modules = path.join(__dirname , '../node_modules');
-
-hbs.registerPartials(directoriopartials);
-
-app.use(express.static(directoriopublico));
-app.use(bodyParser.urlencoded({extended: false}));
-
-app.use('/css', express.static(dirNode_modules + '/bootstrap/dist/css'));
-app.use('/js', express.static(dirNode_modules + '/jquery/dist'));
-app.use('/js', express.static(dirNode_modules + '/popper.js/dist'));
-app.use('/js', express.static(dirNode_modules + '/bootstrap/dist/js'));
-
-app.set('view engine', 'hbs');
-
-app.get('/', (req, res) => {
-    res.render('../template/views/index.hbs');
-});
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const Estudiante = require('../src/models/estudiante');
+const Curso      = require('../src/models/curso');
+app.use(require('./routes/index'));
 
 app.get('/login', (req, res) => {
+    //console.log(__dirname);
     res.render('../template/views/login.hbs');
-});
-
-app.post('/validarLogin', (req, res) => {
-    res.render('../template/views/index.hbs', {
-        usuario: req.body.usuario,
-        contrasena: req.body.contrasena,
-        operacion: 'Login'   
-    });
 });
 
 app.get('/registroUsuario', (req, res) => {
     res.render('../template/views/registroUsuario.hbs');
 });
 
-app.listen(port,() => {
-    console.log('Servidor en el puerto ' + port);
-});
-app.post('/resultadoOperacion', (req, res) => {
-    res.render('../template/views/resultadoOperacion.hbs',{
-        usuario:{
-            operacion: 'registroUsuario',
-            primerNombre: req.body.nombre1,
-            segundoNombre: req.body.nombre2,
-            primerApellido: req.body.apellido1,
-            segundoApellido: req.body.apellido2,
-            id: req.body.id,
-            telefono: req.body.telefono,
-            email: req.body.email,
-            direccion: req.body.direccion,
-            tipo: 'Aspirante'
-        }
-    });
-});
-
-app.get('/verCursos', (req, res) => {
-    res.render('../template/views/listaDeCursos.hbs');
-});
-
-app.get('/inscribirCurso', (req, res) => {
-    res.render('../template/views/inscripcion.hbs');
-});
-
-app.post('/resultadoInscripcion', (req, res) => {
-    res.render('../template/views/resultadoInscripcion.hbs',{
-        idUsuario: req.body.idUsuario,
-        idCurso: req.body.listaDesplegable
-    });
-});
 
 app.get('/crearCurso', (req, res) => {
     res.render('../template/views/crearCurso.hbs');
 });
 
-app.post('/resultadoCreacionCurso', (req, res) => {
-    res.render('../template/views/resultadoCreacionCurso.hbs',{
-        informacionCurso: {
-            id:             req.body.idCurso,
-            nombre:         req.body.nombre,
-            descripcion:    req.body.descripcion,
-            valor:          req.body.valor,
-            modalidad:      req.body.listaModalidad,
-            intensidad:     req.body.intesidad,
-            estado:         'Disponible'
-        }
-    });
-});
-    
 app.get('/verInscritos', (req, res) => {
     res.render('../template/views/inscritos.hbs');
 });
@@ -112,6 +41,10 @@ app.get('/administrarUsuarios', (req, res) => {
     res.render('../template/views/administrarUsuarios.hbs');
 });
 
+app.listen(process.env.PORT,() => {
+    console.log('Servidor en el puerto ' + process.env.PORT);
+});
+
 app.post('/administrarUsuarios', (req, res) => {
     if(req.body.operacion == 'enviar'){
         res.render('../template/views/administrarUsuarios.hbs', {
@@ -126,12 +59,4 @@ app.post('/administrarUsuarios', (req, res) => {
             datosActualizar: ''
         });
     }
-});
-
-app.get('*', (req, res) => {
-    res.render('../template/views/error.hbs');
-});
-
-app.listen(3000, () => {
-    console.log('Escuchando en el puerto 3000');
 });
